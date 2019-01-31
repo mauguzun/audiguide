@@ -1,6 +1,8 @@
-#gmap{
- height: 100vh;
+
+.page{
+    height: 100vh;
 }
+
 
 #header{
     position: fixed;
@@ -18,14 +20,34 @@
     
 }
 
-#menuOverlay{
+.menuOverlay{
     position: fixed;
     background: rgba(37,40,57,0.95);
     left: 0;
-    width: 100%;
-    height: 0;
-    visibility: hidden;
-    opacity: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
     z-index: 999;
-    -webkit-transition: opacity .35s, visibility .35s, height .35s
+   
+}
+
+.menuOverlay ul{
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    list-style: none;
+    padding: 0;
+    width: 100%;
+
+    padding-top: 30vh;
+}
+
+.menuOverlay ul li{
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.shadow {
+    text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
 }
