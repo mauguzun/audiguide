@@ -18,8 +18,8 @@
     under the License.
 -->
 <html>
-    <head>
-        <!--
+  <head>
+    <!--
         Customize this policy to fit your own app's needs. For more guidance, see:
             https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
         Some notes:
@@ -28,22 +28,239 @@
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-        <link rel="stylesheet" type="text/css" href="css/index.css">
-        <title>Hello World</title>
-    </head>
-    <body>
-        <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
-        </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-    </body>
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta
+      name="viewport"
+      content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width"
+    />
+
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <title>Hello World</title>
+
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAX50gEvAyz9A6Sh3BMvC9eOblbLLZOses&libraries=places"
+      async
+      defer
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      let app = {};
+    </script>
+  </head>
+  <body>
+    <div id="main">
+      <div id="gmap">
+        <button @click="pressStart">Start Supe Audio Guide</button>
+      </div>
+    </div>
+  </body>
+
+  <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="js/vue.js"></script>
+  <script type="text/javascript" src="js/mainplayer.js"></script>
+  <!-- <script type="text/javascript" src="js/geo.js"></script> -->
+  <script type="text/javascript" src="js/api.js"></script>
+  <script type="text/javascript" src="js/translate.js"></script>
+  <script type="text/javascript" src="js/points.js"></script>
+  <!-- <script type="text/javascript" src="js/locationtimer.js"></script> -->
+  <script type="text/javascript" src="js/index.js"></script>
+
+  <script>
+    new Vue({
+      el: "#main",
+      data: {
+        mapOptions: {
+          map: null,
+          location: null,
+          markers: null
+        },
+
+        timer: null,
+        timerOptions: {
+          inetral: 7000
+        },
+
+        pointsOptions: {
+          allowDistance: 0.5,
+          samePlace: 0.01
+        },
+
+        currentLat: null,
+        currentLng: null,
+        points: null
+      },
+      methods: {
+        timerStart() {
+          this.timerStop();
+          const self = this;
+          this.timer = setInterval(function() {
+            self.timerAction();
+          }, self.timerOptions.inetral);
+        },
+        timerStop() {
+          if (this.timer != null) {
+            clearInterval(this.timer);
+            this.timer = null;
+          }
+        },
+        timerAction() {
+          this.getCurrentPosition()
+            .then(done => {
+              if (
+                this.currentLat == done.coords.latitude &&
+                this.currentLng == done.coords.longitude
+              ) {
+                console.log("same place");
+              } else {
+                console.log("show");
+                // save old
+                this.prevLat = this.currentLat;
+                this.prevLng = this.currentLng;
+                // set new
+                this.currentLat = done.coords.latitude;
+                this.currentLng = done.coords.longitude;
+                // show map
+                this.mapMyLocation();
+                // soirt  points
+                this.sortPoints();
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            })
+            .finally(e => {});
+        },
+        getCurrentPosition() {
+          if (navigator.geolocation) {
+            return new Promise((resolve, reject) =>
+              navigator.geolocation.getCurrentPosition(resolve, reject, {
+                enableHighAccuracy: true
+              })
+            );
+          } else {
+            return new Promise(resolve => resolve({}));
+          }
+        },
+
+        pressStart() {
+          this.mapLoad();
+
+          // faster !!!!
+          this.timerAction();
+          ////
+          this.points = PointManager.Load();
+          /// todo promise
+          this.mapSetMarkers();
+          this.timerStart();
+        },
+
+        // points sort methods
+        sortPoints() {
+          if (
+            this.distanceInKmBetweenEarthCoordinates(
+              this.prevLat,
+              this.prevLng,
+              this.currentLat,
+              this.currentLng
+            ) < this.pointsOptions.samePlace
+          ) {
+            console.log("we are same place");
+            return;
+          }
+
+     
+          for (let ind in this.points) {
+            this.points[ind].distance = this.distanceInKmBetweenEarthCoordinates(
+              this.currentLat,
+              this.currentLng,
+              this.points[ind].lat,
+              this.points[ind].lng
+            );
+            console.log(this.points[ind].distance);
+          }
+
+          let clear = this.points.filter(x => x.distance < this.pointsOptions.allowDistance);
+
+          if (clear.length > 0) {
+            clear.sort((a, b) =>
+              a.distance > b.distance ? 1 : b.distance > a.distance ? -1 : 0
+            );
+
+            // todo check if exust?
+            Mainplayer.Play(clear[0].audio);
+          }
+        },
+        distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
+          var earthRadiusKm = 6371;
+
+          var dLat = this.degreesToRadians(lat2 - lat1);
+          var dLon = this.degreesToRadians(lon2 - lon1);
+
+          lat1 = this.degreesToRadians(lat1);
+          lat2 = this.degreesToRadians(lat2);
+
+          var a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.sin(dLon / 2) *
+              Math.sin(dLon / 2) *
+              Math.cos(lat1) *
+              Math.cos(lat2);
+          var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+          return earthRadiusKm * c;
+        },
+        degreesToRadians(degrees) {
+          return (degrees * Math.PI) / 180;
+        },
+
+        // map methods
+        mapLoad() {
+          this.mapOptions.map = new google.maps.Map(
+            document.getElementById("gmap"),
+            {
+              center: { lat: 56.9577312, lng: 24.1832039 },
+              zoom: 17,
+              disableDefaultUI: true
+            }
+          );
+        },
+        mapMyLocation() {
+
+          let point  = { lat: this.currentLat, lng: this.currentLng };
+          if (this.mapOptions.location == null) {
+            this.mapOptions.location = new google.maps.Marker({
+              map: this.mapOptions.map,
+              position: point,
+              title: "You are here",
+              icon:
+                "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
+            });
+          }
+          this.mapOptions.location.setPosition(point);
+          this.mapOptions.map.setCenter(point);
+        },
+        mapSetMarkers() {
+          this.mapOptions.markers = [];
+
+          this.points.forEach(element => {
+
+            console.log(element)
+            let marker = new google.maps.Marker({
+              map: this.mapOptions.map,
+              position: { lat: element.lat, lng: element.lng },
+              title: element.title
+            });
+            // on click
+
+            this.mapOptions.markers.push(marker);
+          });
+        }
+      }
+    });
+  </script>
 </html>

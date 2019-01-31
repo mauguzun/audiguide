@@ -1,0 +1,12 @@
+{
+	"menu":{
+		"map":"map",
+		"city":"city",
+		"lang":"lang",
+		"exit":"Exit"
+	},
+	"main":{
+		"title" : "Audio guide",
+		"desc" : "Trisaw audio guide ;)"
+	}
+}
