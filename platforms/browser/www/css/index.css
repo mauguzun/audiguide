@@ -1,3 +1,31 @@
 #gmap{
  height: 100vh;
 }
+
+#header{
+    position: fixed;
+    z-index: 777;
+    right: 5px;
+    top:5px;
+    background: #c90090;
+    cursor: pointer;
+}
+#header i{
+    text-shadow: 1px 1px #999; 
+    font-size:25px;
+    padding: 17px;
+    color: white;
+    
+}
+
+#menuOverlay{
+    position: fixed;
+    background: rgba(37,40,57,0.95);
+    left: 0;
+    width: 100%;
+    height: 0;
+    visibility: hidden;
+    opacity: 0;
+    z-index: 999;
+    -webkit-transition: opacity .35s, visibility .35s, height .35s
+}

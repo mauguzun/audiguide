@@ -36,6 +36,21 @@
     />
 
     <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="boot/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="boot/dist/js/bootstrap.min.js"
+    />
+    <link
+      href="font-awesome/css/font-awesome.css"
+      rel="stylesheet"
+      type="text/css"
+    />
     <title>Hello World</title>
 
     <script
@@ -54,9 +69,22 @@
     </script>
   </head>
   <body>
+   
     <div id="main">
-      <div id="gmap">
-        <button @click="pressStart">Start Supe Audio Guide</button>
+      <div id="header" @click="showMenu = true ">
+          <i class="fa fa-navicon"></i>
+      </div>
+      <div id="menuOverlay">
+          <a href="" @click.prevent="go('exit')" >Exit</a>
+          <a href="" @click.prevent="go('settings')" >Exit</a>
+          <a href="" @click.prevent="go('page|about')" >Exit</a>
+         
+      </div>
+
+      <div id="page">
+        <div id="gmap">
+          <button @click="pressStart">Start Supe Audio Guide</button>
+        </div>
       </div>
     </div>
   </body>
@@ -93,7 +121,10 @@
 
         currentLat: null,
         currentLng: null,
-        points: null
+        prevLat:null,
+        prevLng:null,
+        points: null,
+        showMenu : false
       },
       methods: {
         timerStart() {
@@ -174,9 +205,10 @@
             return;
           }
 
-     
           for (let ind in this.points) {
-            this.points[ind].distance = this.distanceInKmBetweenEarthCoordinates(
+            this.points[
+              ind
+            ].distance = this.distanceInKmBetweenEarthCoordinates(
               this.currentLat,
               this.currentLng,
               this.points[ind].lat,
@@ -185,7 +217,9 @@
             console.log(this.points[ind].distance);
           }
 
-          let clear = this.points.filter(x => x.distance < this.pointsOptions.allowDistance);
+          let clear = this.points.filter(
+            x => x.distance < this.pointsOptions.allowDistance
+          );
 
           if (clear.length > 0) {
             clear.sort((a, b) =>
@@ -230,8 +264,7 @@
           );
         },
         mapMyLocation() {
-
-          let point  = { lat: this.currentLat, lng: this.currentLng };
+          let point = { lat: this.currentLat, lng: this.currentLng };
           if (this.mapOptions.location == null) {
             this.mapOptions.location = new google.maps.Marker({
               map: this.mapOptions.map,
@@ -248,8 +281,7 @@
           this.mapOptions.markers = [];
 
           this.points.forEach(element => {
-
-            console.log(element)
+            console.log(element);
             let marker = new google.maps.Marker({
               map: this.mapOptions.map,
               position: { lat: element.lat, lng: element.lng },
@@ -259,7 +291,14 @@
 
             this.mapOptions.markers.push(marker);
           });
+        },
+      
+        // menu 
+   
+        go(arg){
+          alert(arg)
         }
+      
       }
     });
   </script>
