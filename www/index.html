@@ -34,6 +34,7 @@
       name="viewport"
       content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width"
     />
+    
 
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <link
@@ -68,7 +69,10 @@
       let app = {};
     </script>
   </head>
-  <body>
+  <body >
+
+    
+    
     <div id="main">
       <div id="header" @click="showMenu = true ">
         <i class="fa fa-navicon"></i>
@@ -86,7 +90,14 @@
 
       <div id="pagePlace">
         <div v-show="currentPage == 'page' " class="page" id="page"></div>
-        <div v-show="currentPage == 'map' "  style="display:none" class="page " id="gmap"></div>
+        <div v-show="currentPage == 'map' " id="pageMap"  style="display:none" class="page">
+        
+          <div class="top extraPlayer">Extra Play</div>
+          <div class="top mainPlayer">Main Play</div>
+          <div class="top addvancedPlayer">Near Play</div>
+          
+          <div  id="gmap">asd</div>
+        </div>
         <div v-show="currentPage == 'settings' "  class="page container" style="padding-top:15vh;" id="settings">
           <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
@@ -122,6 +133,6 @@
   <script type="text/javascript" src="js/points.js"></script>
   <!-- <script type="text/javascript" src="js/locationtimer.js"></script> -->
   <script type="text/javascript" src="js/index.js"></script>
-  <script type="text/javascript" src="js/map.js"></script>
+  <!-- <script type="text/javascript" src="js/map.js"></script> -->
   <script type="text/javascript" src="js/main.js"></script>
 </html>

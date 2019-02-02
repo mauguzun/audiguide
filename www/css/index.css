@@ -3,6 +3,29 @@
     height: 100vh;
 }
 
+.top{
+    position: fixed;
+    z-index: 999;
+    border: 1px solid red;
+    width: 100%;
+}
+.extraPlayer{
+    top:20px;
+}
+.mainPlayer{
+    top:60px;
+}
+.addvancedPlayer{
+    bottom:10px;
+}
+#gmap{
+    position: fixed;
+    z-index: 333;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
 
 #header{
     position: fixed;

@@ -17,6 +17,9 @@ new Vue({
       samePlace: 0.01
     },
 
+    mainPlayer:null,
+    extraPlayer:null,
+
     currentLat: null,
     currentLng: null,
     prevLat: null,
@@ -88,7 +91,7 @@ new Vue({
       /// todo promise
       this.mapSetMarkers();
       this.timerStart();
-      this.currentPage = 'map';
+      this.currentPage = "map";
     },
 
     // points sort methods
@@ -191,18 +194,73 @@ new Vue({
       });
     },
 
+    play(point){
+      if(this.mainPlayer != null && this.mainPlayer.mediaStatus   == Media.MEDIA_RUNNING   )
+      {
+         // extra +return ;
+         playExtra(point)
+         return ;
+      }
+      // stop pls 
+      if (this.mainPlayer != null){
+        this.mainPlayer.stop();
+      }
+
+
+      this.mainPlayer.stop();
+      this.mainPlayer = new Media(point.audio);
+      // set point -> playaed 
+      this.mainPlayer.play();
+    },
+    playExtra(point)
+    {
+       this.playExtra = new Media(point.audio);
+       
+    },
     // menu
+    exitApp() {
+      if (navigator.app) {
+        navigator.app.exitApp();
+      } else if (navigator.device) {
+        navigator.device.exitApp();
+      } else {
+        window.close();
+      }
+    },
 
     go(arg) {
-      alert(arg);
       if (arg == this.currentPage) {
         return;
       }
+
       this.currentPage = arg;
       switch (arg) {
-        case "settings":
+        case "page|about":
+          Api.PostData("code", { page_name: 'about' }).then(e => {
+            document.getElementById("page").innerHTML = e.code;
+            this.currentPage = 'page'
+          });
           break;
+
+        case 'map':
+          if(this.mapOptions.map == null)
+          {
+            this.pressStart();
+          
+          }
+          this.currentPage = arg;
+          break;
+
+        case "exit":
+          this.exitApp();
+          break;
+
+        default:
+          this.currentPage = arg;
+          break;
+          
       }
+      this.showMenu = false;
     }
   }
 });
