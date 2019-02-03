@@ -21,6 +21,7 @@ app.pages.map = new Vue({
     },
 
     mainPlayer: null,
+    mainPlayerStatus: null,
     extraPlayer: null,
 
     activePoint: null,
@@ -116,6 +117,7 @@ app.pages.map = new Vue({
       ) {
         // console.log("we are same place");
         // return;
+        //////////////////////////////////////////////////////////////////////////////////////////////////
       }
 
       for (let ind in this.points) {
@@ -220,12 +222,16 @@ app.pages.map = new Vue({
     },
 
     play(point) {
+      
+      console.log(point.id + "play id");
+      
       if (
         this.mainPlayer != null &&
-        this.mainPlayer.mediaStatus == Media.MEDIA_RUNNING
+        this.mainPlayerStatus != null &&
+        this.mainPlayerStatus < 4
       ) {
         // extra +return ;
-        playExtra(point);
+        this.playExtra(point);
         return;
       }
       // stop pls
@@ -236,14 +242,26 @@ app.pages.map = new Vue({
       this.points.find(e => e.id == point.id).active = false;
       this.activePoint = point;
 
-      this.mainPlayer = new Media(point.audio, e => {
-        this.mainPlayer = null;
-        this.activePoint = null;
-      });
+      this.mainPlayer = new Media(
+        point.audio,
+        e => {
+          this.mainPlayer = null;
+          this.mainPlayerStatus = null;
+          this.activePoint = null;
+        },
+        e => {},
+        status => {
+          this.mainPlayerStatus = status;
+        }
+      );
       // set point -> playaed
       this.mainPlayer.play();
     },
     playExtra(point) {
+
+      if (this.extraPoint != null  && this.extraPoint.id == point.id)
+      return;
+
       new Media(
         "http://soundbible.com/mp3/Beep%20Ping-SoundBible.com-217088958.mp3"
       ).play();
@@ -252,15 +270,13 @@ app.pages.map = new Vue({
     // click play extra point
     pressExtra(arg) {
       //
-      let point  = this.points.find(e => e.id == arg);
+      let point = this.points.find(e => e.id == arg);
       // clear extra if same
-      if (this.extraPoint && this.extraPoint.id == point.id )
-      {
+      if (this.extraPoint && this.extraPoint.id == point.id) {
         this.extraPoint = null;
       }
       this.playerClear();
       this.play(point);
-    
     },
     closeExtra() {
       this.extraPoint = null;

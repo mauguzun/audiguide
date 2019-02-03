@@ -99,22 +99,22 @@
 
           <div id="gmap"></div>
 
-          <div  v-if="extraPoint != null "   class="top extraPlayer">
+          <div   v-if="extraPoint != null "   class="top extraPlayer">
               <p> {{extraPoint.title}}</p>
-              <img  v-bind:src="extraPoint.img" />
+              <img  class="smallimg"  v-bind:src="extraPoint.img" />
               <button @click="pressExtra(extraPoint.id)">WANT THIS</button>
               <p @click="closeExtra()">x</p>
           </div>
 
           <div  v-if="activePoint != null " class="top mainPlayer">
                <p> {{activePoint.title}}</p>
-               <img  v-bind:src="activePoint.img" />
+               <img  class="smallimg"  v-bind:src="activePoint.img" />
                <p>{{mainPlayer.getDuration()}}</p>
                <p @click="playerClear">x</p>
                
           </div>
 
-          <div v-if="feautrePoints != null">
+          <div v-if="feautrePoints != null" class="feauturePlayer">
               <div v-for="(item, index) in feautrePoints">
                  
                   <p> {{item.title}}</p>
