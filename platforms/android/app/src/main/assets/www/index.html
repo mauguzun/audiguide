@@ -65,29 +65,73 @@
     ></script>
 
     <script>
-      let app = {};
+      var app = {};
+      app.pages = {};
     </script>
   </head>
   <body>
     <div id="main">
-      <div id="header" @click="showMenu = true ">
-        <i class="fa fa-navicon"></i>
-      </div>
-      <div class="menuOverlay shadow" v-show="showMenu">
-        <ul>
-          <li @click.prevent="go('exit')">Exit</li>
-          <li @click.prevent="go('settings')">Choose Lang or City</li>
-          <li @click.prevent="go('page|about')">About</li>
-          <li @click.prevent="go('map')">Continue</li>
+      <div id="menu">
+        <div id="header" @click="showMenu = true ">
+          <i class="fa fa-navicon"></i>
+        </div>
 
-          <li><i @click="showMenu = false" class="fa fa-times"></i></li>
-        </ul>
+        <div class="menuOverlay shadow" v-show="showMenu">
+          <ul>
+            <li @click.prevent="go('exit')">Exit</li>
+            <li @click.prevent="go('settings')">Choose Lang or City</li>
+            <li @click.prevent="go('page|about')">About</li>
+            <li @click.prevent="go('map')">Continue</li>
+
+            <li><i @click="showMenu = false" class="fa fa-times"></i></li>
+          </ul>
+        </div>
       </div>
 
       <div id="pagePlace">
-        <div v-show="currentPage == 'page' " class="page" id="page"></div>
-        <div v-show="currentPage == 'map' "  style="display:none" class="page " id="gmap"></div>
-        <div v-show="currentPage == 'settings' "  class="page container" style="padding-top:15vh;" id="settings">
+        <!----------------------------------------page-->
+
+        <!--page-->
+        <div v-show="display == true" class="page" id="vue_page_page">page</div>
+        <!--page-->
+        <div v-show="display == true"  id="vue_page_map" class="page">
+
+
+          <div id="gmap"></div>
+
+          <div  v-if="extraPoint != null "   class="top extraPlayer">
+              <p> {{extraPoint.title}}</p>
+              <img  v-bind:src="extraPoint.img" />
+              <button @click="pressExtra(extraPoint.id)">WANT THIS</button>
+              <p @click="closeExtra()">x</p>
+          </div>
+
+          <div  v-if="activePoint != null " class="top mainPlayer">
+               <p> {{activePoint.title}}</p>
+               <img  v-bind:src="activePoint.img" />
+               <p>{{mainPlayer.getDuration()}}</p>
+               <p @click="playerClear">x</p>
+               
+          </div>
+
+          <div v-if="feautrePoints != null">
+              <div v-for="(item, index) in feautrePoints">
+                 
+                  <p> {{item.title}}</p>
+                  <img  class="smallimg" v-bind:src="item.img" />
+                  <button @click="pressExtra(item.id)">WANT THIS</button>
+               
+                </div>
+          </div>
+
+        </div>
+
+        <!--page-->
+        <div
+          v-show="display == true"
+          class="page container"
+          id="vue_page_settings"
+        >
           <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
             <select class="form-control">
@@ -109,18 +153,23 @@
             </button>
           </div>
         </div>
+
+        <!----------------------------------------page-->
       </div>
     </div>
   </body>
 
   <script type="text/javascript" src="cordova.js"></script>
   <script type="text/javascript" src="js/vue.js"></script>
-  <script type="text/javascript" src="js/mainplayer.js"></script>
-  <!-- <script type="text/javascript" src="js/geo.js"></script> -->
-  <script type="text/javascript" src="js/api.js"></script>
   <script type="text/javascript" src="js/translate.js"></script>
+  <script type="text/javascript" src="js/api.js"></script>
+
   <script type="text/javascript" src="js/points.js"></script>
-  <!-- <script type="text/javascript" src="js/locationtimer.js"></script> -->
+
+  <script src="js/map.js"></script>
+  <script src="js/page.js"></script>
+  <script src="js/settings.js"></script>
+
+  <script src="js/menu.js"></script>
   <script type="text/javascript" src="js/index.js"></script>
-  <script type="text/javascript" src="js/main.js"></script>
 </html>

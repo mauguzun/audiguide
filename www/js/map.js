@@ -1,6 +1,8 @@
-new Vue({
-  el: "#main",
+app.pages.map = new Vue({
+  el: "#vue_page_map",
   data: {
+    display: true,
+
     mapOptions: {
       map: null,
       location: null,
@@ -13,17 +15,23 @@ new Vue({
     },
 
     pointsOptions: {
-      allowDistance: 0.5,
-      samePlace: 0.01
+      pointDistance: 0.5,
+      samePlace: 0.01,
+      feautrePointDistance: 0.9
     },
+
+    mainPlayer: null,
+    extraPlayer: null,
+
+    activePoint: null,
+    extraPoint: null,
+    feautrePoints: null,
 
     currentLat: null,
     currentLng: null,
     prevLat: null,
     prevLng: null,
-    points: null,
-    showMenu: false,
-    currentPage: "settings"
+    points: null
   },
   methods: {
     timerStart() {
@@ -78,7 +86,13 @@ new Vue({
       }
     },
 
-    pressStart() {
+    start() {
+      if (this.mapOptions.map == null) {
+        this.makeMap();
+      }
+    },
+
+    makeMap() {
       this.mapLoad();
 
       // faster !!!!
@@ -88,7 +102,6 @@ new Vue({
       /// todo promise
       this.mapSetMarkers();
       this.timerStart();
-      this.currentPage = 'map';
     },
 
     // points sort methods
@@ -101,8 +114,9 @@ new Vue({
           this.currentLng
         ) < this.pointsOptions.samePlace
       ) {
-        console.log("we are same place");
-        return;
+        // console.log("we are same place");
+        // return;
+////////////////////////////////////////////////////////////////////////////////////////////////////
       }
 
       for (let ind in this.points) {
@@ -112,20 +126,35 @@ new Vue({
           this.points[ind].lat,
           this.points[ind].lng
         );
-        console.log(this.points[ind].distance);
+        console.log(this.points[ind].distance + " " + this.points[ind].title);
       }
 
       let clear = this.points.filter(
-        x => x.distance < this.pointsOptions.allowDistance
+        x => x.distance < this.pointsOptions.pointDistance && x.active == true
       );
 
+      let play = null;
       if (clear.length > 0) {
         clear.sort((a, b) =>
           a.distance > b.distance ? 1 : b.distance > a.distance ? -1 : 0
         );
+        play = clear[0];
+        this.play(play);
+      }
 
-        // todo check if exust?
-        Mainplayer.Play(clear[0].audio);
+      if (play) {
+        this.feautrePoints = this.points.filter(
+          x =>
+            x.distance < this.pointsOptions.feautrePointDistance &&
+            x.active == true &&
+            x.id != play.id
+        );
+      } else {
+        this.feautrePoints = this.points.filter(
+          x =>
+            x.distance < this.pointsOptions.feautrePointDistance &&
+            x.active == true
+        );
       }
     },
     distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
@@ -191,18 +220,59 @@ new Vue({
       });
     },
 
-    // menu
-
-    go(arg) {
-      alert(arg);
-      if (arg == this.currentPage) {
+    play(point) {
+      if (
+        this.mainPlayer != null &&
+        this.mainPlayer.mediaStatus == Media.MEDIA_RUNNING
+      ) {
+        // extra +return ;
+        playExtra(point);
         return;
       }
-      this.currentPage = arg;
-      switch (arg) {
-        case "settings":
-          break;
+      // stop pls
+      if (this.mainPlayer != null) {
+        this.mainPlayer.stop();
       }
+
+      this.points.find(e => e.id == point.id).active = false;
+      this.activePoint = point;
+
+      this.mainPlayer = new Media(point.audio, e => {
+        this.mainPlayer = null;
+        this.activePoint = null;
+      });
+      // set point -> playaed
+      this.mainPlayer.play();
+    },
+    playExtra(point) {
+      new Media(
+        "http://soundbible.com/mp3/Beep%20Ping-SoundBible.com-217088958.mp3"
+      ).play();
+      this.extraPoint = point;
+    },
+    // click play extra point
+    pressExtra(arg) {
+      //
+      let point  = this.points.find(e => e.id == arg);
+      // clear extra if same
+      if (this.extraPoint && this.extraPoint.id == point.id )
+      {
+        this.extraPoint = null;
+      }
+      this.playerClear();
+      this.play(point);
+    
+    },
+    closeExtra() {
+      this.extraPoint = null;
+    },
+
+    playerClear() {
+      if (this.mainPlayer != null) {
+        this.mainPlayer.stop();
+      }
+      this.mainPlayer = null;
+      this.activePoint = null;
     }
   }
 });
