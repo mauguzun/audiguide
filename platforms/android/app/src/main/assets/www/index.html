@@ -36,16 +36,14 @@
     />
 
     <link rel="stylesheet" type="text/css" href="css/index.css" />
+
     <link
       rel="stylesheet"
       type="text/css"
-      href="boot/dist/css/bootstrap.min.css"
+      href="mdbootstrap/css/bootstrap.min.css"
     />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="boot/dist/js/bootstrap.min.js"
-    />
+    <link rel="stylesheet" type="text/css" href="mdbootstrap/css/mdb.css" />
+
     <link
       href="font-awesome/css/font-awesome.css"
       rel="stylesheet"
@@ -72,88 +70,165 @@
   <body>
     <div id="main">
       <div id="menu">
-        <div id="header" @click="showMenu = true ">
-          <i class="fa fa-navicon"></i>
-        </div>
+        <nav class="navbar navbar-light navbar-1 white">
+          <!-- Collapse button -->
+          <button
+            class="navbar-toggler toggler-example"
+            type="button"
+            @click="showMenu = true "
+          >
+            <span class="dark-blue-text"><i class="fa fa-navicon"></i></span>
+          </button>
+        </nav>
 
-        <div class="menuOverlay shadow" v-show="showMenu">
-          <ul>
-            <li @click.prevent="go('exit')">Exit</li>
-            <li @click.prevent="go('settings')">Choose Lang or City</li>
-            <li @click.prevent="go('page|about')">About</li>
-            <li @click.prevent="go('map')">Continue</li>
+        <div class="menuOverlay " v-show="showMenu">
+          <div class="menu-div" @click="showMenu = false">
+            <ul class="list-group list-group-flush card">
+              <li class="list-group-item" @click.prevent="go('exit')">Exit</li>
+              <li class="list-group-item" @click.prevent="go('settings')">
+                <i class="fa fa-times"></i> Choose Lang or City
+              </li>
+              <li class="list-group-item" @click.prevent="go('page|about')">
+                <i class="fa fa-times"></i> About
+              </li>
+              <li class="list-group-item" @click.prevent="go('map')">
+                <i class="fa fa-times"></i> Continue
+              </li>
 
-            <li><i @click="showMenu = false" class="fa fa-times"></i></li>
-          </ul>
+              <li class="list-group-item" @click="showMenu = false">
+                <i class="fa fa-times"></i>Close
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-
       <div id="pagePlace">
         <!----------------------------------------page-->
 
         <!--page-->
-        <div v-show="display == true" class="page" id="vue_page_page">page</div>
-        <!--page-->
-        <div v-show="display == true"  id="vue_page_map" class="page">
+        <div v-show="display == true" class="page" id="vue_page_page">
 
-
-          <div id="gmap"></div>
-
-          <div   v-if="extraPoint != null "   class="top extraPlayer">
-              <p> {{extraPoint.title}}</p>
-              <img  class="smallimg"  v-bind:src="extraPoint.img" />
-              <button @click="pressExtra(extraPoint.id)">WANT THIS</button>
-              <p @click="closeExtra()">x</p>
-          </div>
-
-          <div  v-if="activePoint != null " class="top mainPlayer">
-               <p> {{activePoint.title}}</p>
-               <img  class="smallimg"  v-bind:src="activePoint.img" />
-               <p>{{mainPlayer.getDuration()}}</p>
-               <p @click="playerClear">x</p>
-               
-          </div>
-
-          <div v-if="feautrePoints != null" class="feauturePlayer">
-              <div v-for="(item, index) in feautrePoints">
-                 
-                  <p> {{item.title}}</p>
-                  <img  class="smallimg" v-bind:src="item.img" />
-                  <button @click="pressExtra(item.id)">WANT THIS</button>
-               
+          
+              <div class="card card-image page" style="background-image: url(https://mdbootstrap.com/img/Photos/Others/forest2.jpg);">
+                <div class="page text-white text-center rgba-stylish-strong py-5 px-4">
+                  <div class="py-5">
+              
+                    <!-- Content -->
+                   
+                    <div id="page"></div>
+                   
+                  </div>
                 </div>
+              </div>
           </div>
 
         </div>
+        <!--page-->
+        <div v-show="display == true" id="vue_page_map" class="page">
+          <div id="gmap"></div>
 
+          <!-- extra player-->
+          <div v-if="extraPoint != null " class="top extraPlayer">
+            <div class="card maincard">
+              <div class="media">
+                <img
+                  class="d-flex align-self-center mr-3 fifty-img"
+                  v-bind:src="extraPoint.img"
+                  alt="Generic placeholder image"
+                />
+                <div class="media-body">
+                  <a @click="pressExtra(extraPoint.id)">
+                    {{ extraPoint.title }}
+                  </a>
+                </div>
+                <div>
+                  <a @click="closeExtra()" href="#"
+                    ><i class="fa fa-times"></i
+                  ></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- main player-->
+          <div v-if="activePoint != null " class="top mainPlayer">
+            <div class="card maincard">
+              <div class="media">
+                <img
+                  class="d-flex align-self-center mr-3 fifty-img"
+                  v-bind:src="activePoint.img"
+                  alt="Generic placeholder image"
+                />
+                <div class="media-body">
+                  <p class="font-weight-bold">
+                    {{ activePoint.title }}, {{ mainPlayer.getDuration() }}
+                  </p>
+
+                  <progress value="22" max="100"></progress>
+                </div>
+                <div>
+                  <a @click="playerClear" href="#"
+                    ><i class="fa fa-times"></i
+                  ></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end mai palayer , start featury-->
+
+          <div v-if="feautrePoints != null" class="top feauturePlayer">
+            <div class="card maincard">
+              <ul class="list-unstyled" v-for="(item, index) in feautrePoints">
+                <li class="media hoverable">
+                  <img
+                    class="d-flex mr-3 fifty-img"
+                    @click="pressExtra(item.id)"
+                    v-bind:src="item.img"
+                    alt="Generic
+                  placeholder image"
+                  />
+                  <div class="media-body">
+                    <p>{{ item.title }}</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- end mai palayer , start featury-->
         <!--page-->
         <div
           v-show="display == true"
-          class="page container"
+          class="page"
           id="vue_page_settings"
         >
-          <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <select class="form-control">
-              <option value="Nice">Nice</option>
-            </select>
-            <small id="emailHelp" class="form-text text-muted"
-              >We'll never share your email with anyone else.</small
-            >
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <select class="form-control">
-              <option value="Nice">Nice</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <button type="submit" @click="pressStart" class="btn btn-primary">
-              Submit
-            </button>
+          <div style="padding:20vh 10px;">
+            <h1>Please select</h1>
+            <div class="input-group mb-3">
+              <select class="browser-default custom-select">
+                <option value="" disabled selected>Choose your option</option>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+              </select>
+            </div>
+
+            <div class="input-group mb-3">
+              <select class="browser-default custom-select">
+                <option value="" disabled selected>Choose your option</option>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+              </select>
+            </div>
+            <div class="alert alert-primary" role="alert">
+                A simple primary alert—check it out!
+              </div>
+            <div class="inpu-goup mb-3">
+                <button type="button" @click="pressStart()" class="btn btn-deep-purple">Lets start</button>
+            </div>
           </div>
         </div>
-
         <!----------------------------------------page-->
       </div>
     </div>

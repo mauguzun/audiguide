@@ -33,6 +33,7 @@ let menu = new Vue({
         {
             case 'map':
             app.pages.map.display = true;
+            app.pages.map.start();
             break;
 
             //  di work ?
@@ -42,7 +43,8 @@ let menu = new Vue({
             break;
 
             case "settings":
-            app.page
+            app.pages.settings.display = true;
+            break;
 
         }
         this.showMenu = false;

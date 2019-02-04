@@ -10,7 +10,7 @@ document.addEventListener("deviceready", function() {
   Translate.LoadLang().then(result => {
     trans = result;
     PointManager.Load(); //
-    app.pages.map.start();
+   
   });
 });
 

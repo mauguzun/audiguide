@@ -1,7 +1,7 @@
 app.pages.map = new Vue({
   el: "#vue_page_map",
   data: {
-    display: true,
+    display: false,
 
     mapOptions: {
       map: null,
@@ -115,7 +115,7 @@ app.pages.map = new Vue({
           this.currentLng
         ) < this.pointsOptions.samePlace
       ) {
-  /////////////////////////////////////////////// sor point ?  yeas pleease /////////////////
+  /////////////////////////////////////////////// sor point ?  yeas pleease /////////////////git 
         // console.log("we are same place");
         // return;
         //////////////////////////////////////////////////////////////////////////////////////////////////
