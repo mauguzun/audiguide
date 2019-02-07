@@ -164,7 +164,7 @@
                     {{ activePoint.title }}, {{ mainPlayer.getDuration() }}
                   </p>
 
-                  <progress value="22" max="100"></progress>
+                  <progress v-bind:value="mainPlayerCurrent" v-bind:max="mainPlayer.getDuration()"></progress>
                 </div>
                 <div>
                   <a @click="playerClear" href="#"

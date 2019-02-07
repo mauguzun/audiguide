@@ -1,36 +1,19 @@
 let media = null;
 var trans = null;
 app.isPhone = window.cordova.platformId == "browser" ? false : true;
-app.pages = {};
-app.start = false;
+app.city = null;
 
 document.addEventListener("deviceready", function() {
-
-  
   if (app.isPhone) {
     runBackground(cordova);
   }
 
   Translate.LoadLang().then(result => {
-    trans = result;
-    Points.Load(); //
-  
-   
-    
-    // load points !!!
+       trans = result;
+       // go to settings 
+       
   });
 });
-
-
-function start(){
-    if(app.start == false){
-        Geo.Load();
-        Geo.SetPoints(Points.points);
-        Locationtimer.start();
-    }
-    app.start = true;
-   
-}
 
 function runBackground(cordova) {
   cordova.plugins.backgroundMode.setEnabled(true);

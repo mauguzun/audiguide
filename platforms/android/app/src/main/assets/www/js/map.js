@@ -20,10 +20,11 @@ app.pages.map = new Vue({
       feautrePointDistance: 0.9
     },
 
-    
-
+    mainPlayerTimer: null,
     mainPlayer: null,
     mainPlayerStatus: null,
+    mainPlayerCurrent: null,
+
     extraPlayer: null,
 
     activePoint: null,
@@ -36,7 +37,15 @@ app.pages.map = new Vue({
     prevLng: null,
     points: null
   },
- 
+
+  watch: {
+    display(value) {
+      if (value == false) {
+        this.playerClear();
+      }
+    }
+  },
+
   methods: {
     timerStart() {
       this.timerStop();
@@ -52,19 +61,18 @@ app.pages.map = new Vue({
       }
     },
     timerAction() {
-
-      console.log("in timer")
+      console.log("in timer");
       console.log(this.feautrePoints);
-      console.log("in timer")
+      console.log("in timer");
 
       this.getCurrentPosition()
         .then(done => {
-          if (
-            this.currentLat == done.coords.latitude &&
-            this.currentLng == done.coords.longitude
-          ) {
-            console.log("same place");
-          } else {
+          // if (
+          //   this.currentLat == done.coords.latitude &&
+          //   this.currentLng == done.coords.longitude
+          // ) {
+          //   console.log("same place");
+          // } else {
             console.log("show");
             // save old
             this.prevLat = this.currentLat;
@@ -76,7 +84,7 @@ app.pages.map = new Vue({
             this.mapMyLocation();
             // soirt  points
             this.sortPoints();
-          }
+          // }
         })
         .catch(error => {
           console.log(error);
@@ -115,9 +123,6 @@ app.pages.map = new Vue({
 
     // points sort methods
     sortPoints() {
-
-      
-    
       if (
         this.distanceInKmBetweenEarthCoordinates(
           this.prevLat,
@@ -126,7 +131,7 @@ app.pages.map = new Vue({
           this.currentLng
         ) < this.pointsOptions.samePlace
       ) {
-  /////////////////////////////////////////////// sor point ?  yeas pleease /////////////////git 
+        /////////////////////////////////////////////// sor point ?  yeas pleease /////////////////git
         // console.log("we are same place");
         // return;
         //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -156,8 +161,7 @@ app.pages.map = new Vue({
       }
 
       if (play) {
-
-        console.log("play")
+        console.log("play");
         this.feautrePoints = this.points.filter(
           x =>
             x.distance < this.pointsOptions.feautrePointDistance &&
@@ -165,7 +169,7 @@ app.pages.map = new Vue({
             x.id != play.id
         );
       } else {
-        console.log("not paly")
+        console.log("not paly");
         this.feautrePoints = this.points.filter(
           x =>
             x.distance < this.pointsOptions.feautrePointDistance &&
@@ -226,13 +230,9 @@ app.pages.map = new Vue({
       console.log("Ssdf");
       console.log(this.points);
 
-
-      this.points.forEach((element,index  ,theArray) => {
-       
+      this.points.forEach((element, index, theArray) => {
         theArray[index].lat = parseFloat(theArray[index].lat);
-        theArray[index].lng = parseFloat(theArray[index].lng );
-
-   
+        theArray[index].lng = parseFloat(theArray[index].lng);
 
         let marker = new google.maps.Marker({
           map: this.mapOptions.map,
@@ -246,9 +246,8 @@ app.pages.map = new Vue({
     },
 
     play(point) {
-      
       console.log(point.id + "play id");
-      
+
       if (
         this.mainPlayer != null &&
         this.mainPlayerStatus != null &&
@@ -264,6 +263,7 @@ app.pages.map = new Vue({
       }
 
       this.points.find(e => e.id == point.id).active = false;
+      console.log(this.points);
       this.activePoint = point;
 
       this.mainPlayer = new Media(
@@ -271,7 +271,11 @@ app.pages.map = new Vue({
         e => {
           this.mainPlayer = null;
           this.mainPlayerStatus = null;
+
+          clearInterval(this.mainPlayerTimer);
+          this.mainPlayerTimer = null;
           this.activePoint = null;
+          this.mainPlayerCurrent = null;
         },
         e => {},
         status => {
@@ -280,11 +284,22 @@ app.pages.map = new Vue({
       );
       // set point -> playaed
       this.mainPlayer.play();
+      // setup audi update ???
+      this.mainPlayerTimer = setInterval(e => {
+        if (this.mainPlayer != null) {
+          this.mainPlayer.getCurrentPosition(
+            done => {
+              this.mainPlayerCurrent = done;
+            },
+            error => {}
+          );
+        } else {
+          console.log("Wtf amigo ??");
+        }
+      }, 1000);
     },
     playExtra(point) {
-
-      if (this.extraPoint != null  && this.extraPoint.id == point.id)
-      return;
+      if (this.extraPoint != null && this.extraPoint.id == point.id) return;
 
       new Media(
         "http://soundbible.com/mp3/Beep%20Ping-SoundBible.com-217088958.mp3"
@@ -312,6 +327,9 @@ app.pages.map = new Vue({
       }
       this.mainPlayer = null;
       this.activePoint = null;
+
+      clearInterval(this.mainPlayerTimer);
+      this.mainPlayerCurrent = null;
     }
   }
 });

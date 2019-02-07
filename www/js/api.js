@@ -1,5 +1,5 @@
 const Api = {
-  address: "http://localhost/audio/api/",
+  address: "http://audio.tricypolitain.com/api/",
   // address: "http://localhost/cyber_project/api/guide",
  
 

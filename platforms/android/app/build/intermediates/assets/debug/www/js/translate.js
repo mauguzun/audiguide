@@ -1,7 +1,12 @@
 const Translate = {
   index: "lang",
   default: "en",
-  list: [{ code: "en", name: "English" }, { code: "fr", name: "Franch" }],
+  list: [
+    { code: "en", name: "English" },
+    { code: "ru", name: "Русский язык" },
+    { code: "lv", name: "Latviešu valoda" },
+    { code: "fr", name: " Français	" }
+  ],
   
   LoadLang(arg = null) {
     let url = `local/${this.default}/data.json`;
@@ -16,6 +21,7 @@ const Translate = {
     }
     return $.getJSON(url);
   },
+  
   GetCurrentCode() {
     return localStorage.getItem(this.index);
   }
