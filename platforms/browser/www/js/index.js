@@ -1,6 +1,7 @@
 let media = null;
 var trans = null;
 app.isPhone = window.cordova.platformId == "browser" ? false : true;
+app.city = null;
 
 document.addEventListener("deviceready", function() {
   if (app.isPhone) {

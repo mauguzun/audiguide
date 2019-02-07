@@ -7,13 +7,17 @@ app.pages.settings = new Vue({
     cities: null,
     info: null,
     lang: Translate.GetCurrentCode(),
-    city : 1 ,
+    city : City.city ,
   },  
   methods: {
     pressStart() {
       
       this.info = null;
 
+      if(this.City != City.city)
+      {
+        City.city = this.city;
+      }
     
       if (this.lang != Translate.GetCurrentCode()) {
         let promise = Translate.LoadLang(this.lang);
@@ -31,13 +35,13 @@ app.pages.settings = new Vue({
         if (result.action) {
           if (result.message != null) {
             if (confirm(result.message)) {
-              app.pages.map.points = result.point;
+              app.pages.map.points = result.points;
               menu.go("map");
             }else{
               this.info = result.message;
             }
           } else {
-            app.pages.map.points = result.point;
+            app.pages.map.points = result.points;
             menu.go("map");
           }
         }

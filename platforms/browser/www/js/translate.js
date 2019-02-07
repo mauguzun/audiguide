@@ -21,6 +21,7 @@ const Translate = {
     }
     return $.getJSON(url);
   },
+  
   GetCurrentCode() {
     return localStorage.getItem(this.index);
   }

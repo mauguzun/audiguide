@@ -20,6 +20,8 @@ app.pages.map = new Vue({
       feautrePointDistance: 0.9
     },
 
+    
+
     mainPlayer: null,
     mainPlayerStatus: null,
     extraPlayer: null,
@@ -34,6 +36,7 @@ app.pages.map = new Vue({
     prevLng: null,
     points: null
   },
+ 
   methods: {
     timerStart() {
       this.timerStop();
@@ -49,6 +52,11 @@ app.pages.map = new Vue({
       }
     },
     timerAction() {
+
+      console.log("in timer")
+      console.log(this.feautrePoints);
+      console.log("in timer")
+
       this.getCurrentPosition()
         .then(done => {
           if (
@@ -99,7 +107,7 @@ app.pages.map = new Vue({
       // faster !!!!
       this.timerAction();
       ////
-      this.points = PointManager.Load();
+      //this.points = PointManager.Load();
       /// todo promise
       this.mapSetMarkers();
       this.timerStart();
@@ -107,6 +115,9 @@ app.pages.map = new Vue({
 
     // points sort methods
     sortPoints() {
+
+      
+    
       if (
         this.distanceInKmBetweenEarthCoordinates(
           this.prevLat,
@@ -145,6 +156,8 @@ app.pages.map = new Vue({
       }
 
       if (play) {
+
+        console.log("play")
         this.feautrePoints = this.points.filter(
           x =>
             x.distance < this.pointsOptions.feautrePointDistance &&
@@ -152,6 +165,7 @@ app.pages.map = new Vue({
             x.id != play.id
         );
       } else {
+        console.log("not paly")
         this.feautrePoints = this.points.filter(
           x =>
             x.distance < this.pointsOptions.feautrePointDistance &&
@@ -209,8 +223,17 @@ app.pages.map = new Vue({
     mapSetMarkers() {
       this.mapOptions.markers = [];
 
-      this.points.forEach(element => {
-        console.log(element);
+      console.log("Ssdf");
+      console.log(this.points);
+
+
+      this.points.forEach((element,index  ,theArray) => {
+       
+        theArray[index].lat = parseFloat(theArray[index].lat);
+        theArray[index].lng = parseFloat(theArray[index].lng );
+
+   
+
         let marker = new google.maps.Marker({
           map: this.mapOptions.map,
           position: { lat: element.lat, lng: element.lng },
@@ -244,7 +267,7 @@ app.pages.map = new Vue({
       this.activePoint = point;
 
       this.mainPlayer = new Media(
-        point.audio,
+        point.mp3,
         e => {
           this.mainPlayer = null;
           this.mainPlayerStatus = null;
