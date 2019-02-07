@@ -1,0 +1,166 @@
+{
+	"map": {
+		"input": {
+			"attr": {
+				"placeholder": {
+					"start": "From",
+					"stop": "Destination point"
+				}
+			}
+		},
+		"links": {
+			"order": "Just maka order m###ca"
+		},
+		"texts": {
+			"blocks": {
+				"warning": "Something importnatn go here"
+			}
+		}
+	},
+	"gmap": {
+		"texts": {
+			"error": "We cant find direction betweene this two points you bastartd "
+		}
+	},
+	"lang": {
+		"texts": {
+			"title": {
+				"change": "Please change lang ....."
+			}
+		}
+	},
+	"confirm_code": {
+		"texts": {
+			"blocks": {
+				"extra": "Some important info , btw for test purpose all confirm code is 12345"
+			}
+		},
+		"input": {
+			"attr": {
+				"placeholder": {
+					"code": "5 code number form sms "
+				},
+				"value": {
+					"register": "Confirm Code ENGLSIH"
+				}
+			}
+		}
+	},
+	"login": {
+		"input": {
+			"attr": {
+				"placeholder": {
+					"phone": "Phone number with country code (Required)",
+					"name": "Name (Required ) ",
+					"email": "Email (Optional) "
+				},
+				"value": {
+					"register": "Register"
+				}
+			}
+		},
+		"texts": {
+			"errors": {
+				"required": "Phone and name is required"
+			},
+			"text":{
+				"start" : "Enter you number to start"
+			}
+		}
+	},
+	"order": {
+		"texts": {
+			"title": {
+				"await": "Wait thrisaw",
+				"price": "Price ",
+				"distance": "~ Distance",
+				"period": "~ aprox time",
+				"start": "from",
+				"stop": "top"
+			},
+			"block": {
+				"important": "u can`t cancel order so please don`t order just for test ....."
+			}
+		},
+		"links": {
+			"back": "Cancel , back to select from to "
+		},
+		"input": {
+			"attr": {
+				"value": {
+					"order": "ORDER THIS"
+				}
+			}
+		}
+	},
+	"menu": {
+		"text": {
+			"greeting": "Hello ",
+			"userName": "stranger"
+		},
+		"links": {
+			"order": "make a order",
+			"order_page": "order_page ,only for debug",
+			"thank_you": "thank_you ,only for debug",
+			"login": "make a login",
+			"logout": "make a logout",
+			"confirm": "make a confirm , only for debug ",
+			"lang": "choose lang",
+			"about": "about",
+			"history": "view my historie",
+			"exit": "Close"
+		}
+	},
+	"thank_you": {
+		"title": {
+			"head": "some positive shit go here"
+		},
+		"texts": {
+			"block": "If a selector is provided, popover objects will be delegated to the specified targets. In practice, this is used to enable dynamic HTML content to have popovers added. See this and an informative example."
+		}
+	},
+	"system": {
+		"offline": "Olfine !",
+		"title": "TITLE",
+		"desc": "Desc"
+	},
+	"history": {
+		"input": {
+			"attr": {
+				"load": "Show  previus"
+			}
+		},
+		"text": {
+			"title": {
+				"page": "Yours previus tours",
+				"not_have_history": "Your are noob here ^^"
+			}
+		}
+	},
+	"pay": {
+		"input": {
+			"attr": {
+				"placeholder": {
+					"code": "16 dig number on card",
+					"expYear": "16 dig number on card",
+					"expMonth": "expMonth",
+					"cvc": "cvc"
+				}
+			}
+		},
+		"button": {
+			"text": {
+				"pay": "Pay via credit card"
+			}
+		},
+
+		"text": {
+			"title": {
+				"page": "Payment via credit card"
+			},
+			"block": {
+				"done": "Payment done"
+			}
+		}
+	}
+}

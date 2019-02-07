@@ -3,11 +3,11 @@ const Translate = {
   default: "en",
   list: [
     { code: "en", name: "English" },
-    { code: "ru", nane: "Русский язык" },
-    { code: "no", nane: "Norsk" },
+    { code: "ru", name: "Русский язык" },
+    { code: "lv", name: "Latviešu valoda" },
     { code: "fr", name: " Français	" }
   ],
-
+  
   LoadLang(arg = null) {
     let url = `local/${this.default}/data.json`;
 

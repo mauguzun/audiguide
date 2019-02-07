@@ -1,6 +1,7 @@
 let media = null;
 var trans = null;
 app.isPhone = window.cordova.platformId == "browser" ? false : true;
+app.city = null;
 
 document.addEventListener("deviceready", function() {
   if (app.isPhone) {
@@ -8,9 +9,9 @@ document.addEventListener("deviceready", function() {
   }
 
   Translate.LoadLang().then(result => {
-    trans = result;
-    PointManager.Load(); //
-   
+       trans = result;
+       // go to settings 
+       
   });
 });
 

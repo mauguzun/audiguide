@@ -8,9 +8,9 @@ document.addEventListener("deviceready", function() {
   }
 
   Translate.LoadLang().then(result => {
-    trans = result;
-    PointManager.Load(); //
-   
+       trans = result;
+       // go to settings 
+       
   });
 });
 

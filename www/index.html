@@ -205,24 +205,18 @@
           <div style="padding:20vh 10px;">
             <h1>Please select</h1>
             <div class="input-group mb-3">
-              <select class="browser-default custom-select">
-                <option value="" disabled selected>Choose your option</option>
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-                <option value="3">Option 3</option>
+              <select ref="lang" v-model="lang"  class="browser-default custom-select">
+                 <option v-for="(value) in langs"    :value="value.code">{{value.name}}</option>
               </select>
             </div>
 
-            <div class="input-group mb-3">
-              <select class="browser-default custom-select">
-                <option value="" disabled selected>Choose your option</option>
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-                <option value="3">Option 3</option>
+            <div   class="input-group mb-3" v-if="cities != null ">
+              <select  ref="city"  v-model="city" class="browser-default custom-select"  >
+                <option v-for="(value) in cities" :value="value.id">{{value.title}}</option>
               </select>
             </div>
-            <div class="alert alert-primary" role="alert">
-                A simple primary alert—check it out!
+            <div class="alert alert-primary" v-if="info != null" role="alert">
+               {{info}}
               </div>
             <div class="inpu-goup mb-3">
                 <button type="button" @click="pressStart()" class="btn btn-deep-purple">Lets start</button>
@@ -241,10 +235,12 @@
 
   <script type="text/javascript" src="js/points.js"></script>
 
+
+  <script type="text/javascript" src="js/index.js"></script>
   <script src="js/map.js"></script>
   <script src="js/page.js"></script>
   <script src="js/settings.js"></script>
 
   <script src="js/menu.js"></script>
-  <script type="text/javascript" src="js/index.js"></script>
+
 </html>
